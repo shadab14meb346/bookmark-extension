@@ -17,30 +17,20 @@ var callback = function (mutationsList) {
 			)
 		);
 		if (addedDivNode.length) {
-			const mainDivHavingTweetActions = [];
 			for (const div of addedDivNode) {
-				console.log(
-					div.querySelector(
-						".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
-					)
+				const mainDivHavingTweetActions = div.querySelector(
+					".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
 				);
+				if (mainDivHavingTweetActions) {
+					const newDiv = document.createElement("div");
+					newDiv.innerHTML = "BM";
+					newDiv.style.color = "#5b7082";
+					newDiv.style.display = "flex";
+					newDiv.style.alignItems = "center";
+					mainDivHavingTweetActions.appendChild(newDiv);
+				}
 			}
 		}
-		// addedDivNode.length &&
-		// 	console.log(
-		// 		addedDivNode.querySelector(
-		// 			".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
-		// 		)
-		// 	);
-		// if (
-		// 	addedNodes.innerText.includes(
-		// 		`<div style="position: absolute; width: 100%; transform: translateY`
-		// 	)
-		// ) {
-		// 	console.log(addedNodes);
-		// }
-		// const articles = addedNodes.filter((node) => node.nodeName);
-		// console.log(articles, "articles");
 	};
 
 	for (const section of sections) {
