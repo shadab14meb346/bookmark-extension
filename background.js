@@ -21,17 +21,41 @@
 // 		});
 // 	}
 // });
-chrome.tabs.onActivated.addListener((tab) => {
-	// console.log(tab);
-	chrome.tabs.get(tab.tabId, (current_tab_info) => {
-		if (/^https:\/\/www\.google/.test(current_tab_info.url)) {
-			chrome.tabs.executeScript(null, {file: "./foreground.js"}, () =>
-				console.log("I injected foreground")
-			);
-		}
-	});
-});
+// chrome.tabs.onActivated.addListener((tab) => {
+// 	// console.log(tab);
+// 	chrome.tabs.get(tab.tabId, (current_tab_info) => {
+// 		if (/^https:\/\/www\.google/.test(current_tab_info.url)) {
+// 			chrome.tabs.executeScript(null, {file: "./foreground.js"}, () =>
+// 				console.log("I injected foreground")
+// 			);
+// 		}
+// 	});
+// });
 // console.log("from background");
 // chrome.tabs.executeScript(null, {file: "./foreground.js"}, () =>
 // 	console.log("I injected foreground")
 // );
+console.log("background running");
+
+chrome.runtime.onMessage.addListener(receiver);
+
+async function receiver(request, sender, sendResponse) {
+	try {
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				data: request.tweetLink,
+			}),
+		};
+		const data = await fetch(
+			"https://backend-bookmarker.herokuapp.com/demo",
+			options
+		);
+		console.log(data.json());
+	} catch (error) {
+		console.error(error);
+	}
+}

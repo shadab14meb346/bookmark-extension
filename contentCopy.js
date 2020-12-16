@@ -1,3 +1,11 @@
+function handleBMClick(tweetLink) {
+	console.log(tweetLink);
+	let message = {
+		tweetLink,
+	};
+	chrome.runtime.sendMessage(message);
+}
+
 function addBMButton(mainDivHavingTweetActions) {
 	const linkOfTweet = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
 		"a"
@@ -10,7 +18,7 @@ function addBMButton(mainDivHavingTweetActions) {
 	bewButton.style.display = "flex";
 	bewButton.style.alignItems = "center";
 	bewButton.addEventListener("click", function (e) {
-		console.log(e.target.value);
+		handleBMClick(e.target.value);
 	});
 	mainDivHavingTweetActions.appendChild(bewButton);
 }
