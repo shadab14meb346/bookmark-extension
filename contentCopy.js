@@ -1,9 +1,19 @@
-function handleBMClick(tweetLink) {
-	console.log(tweetLink);
+function uuidv4() {
+	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+		var r = (Math.random() * 16) | 0,
+			v = c == "x" ? r : (r & 0x3) | 0x8;
+		return v.toString(16);
+	});
+}
+
+function handleBMClick(tweetLink, id) {
+	console.log(tweetLink, id);
 	let message = {
 		tweetLink,
+		id,
 	};
 	chrome.runtime.sendMessage(message);
+	document.getElementById(id).style["background"] = "red";
 }
 
 function addBMButton(mainDivHavingTweetActions) {
@@ -17,8 +27,9 @@ function addBMButton(mainDivHavingTweetActions) {
 	bewButton.style.color = "#5b7082";
 	bewButton.style.display = "flex";
 	bewButton.style.alignItems = "center";
+	bewButton.id = uuidv4();
 	bewButton.addEventListener("click", function (e) {
-		handleBMClick(e.target.value);
+		handleBMClick(e.target.value, e.target.id);
 	});
 	mainDivHavingTweetActions.appendChild(bewButton);
 }
