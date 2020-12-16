@@ -20,7 +20,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://twitter.com/*"],
-			"js": ["contentCopy.js"]
+			"js": ["contentCopy.js", "content1.js"]
 		}
 	],
 	"permissions": ["tabs", "https://www.google.com/"]

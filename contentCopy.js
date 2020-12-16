@@ -1,3 +1,19 @@
+function addBMButton(mainDivHavingTweetActions) {
+	const linkOfTweet = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
+		"a"
+	)[1];
+	const bewButton = document.createElement("button");
+	bewButton.innerHTML = "BM";
+	bewButton.value = linkOfTweet;
+	bewButton.id = "";
+	bewButton.style.color = "#5b7082";
+	bewButton.style.display = "flex";
+	bewButton.style.alignItems = "center";
+	bewButton.addEventListener("click", function (e) {
+		console.log(e.target.value);
+	});
+	mainDivHavingTweetActions.appendChild(bewButton);
+}
 const callbackForSectionMutation = function (_mutations) {
 	const addedNodes = [];
 	_mutations.forEach(
@@ -10,12 +26,7 @@ const callbackForSectionMutation = function (_mutations) {
 				".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
 			);
 			if (mainDivHavingTweetActions) {
-				const newDiv = document.createElement("div");
-				newDiv.innerHTML = "BM";
-				newDiv.style.color = "#5b7082";
-				newDiv.style.display = "flex";
-				newDiv.style.alignItems = "center";
-				mainDivHavingTweetActions.appendChild(newDiv);
+				addBMButton(mainDivHavingTweetActions);
 			}
 		}
 	}
@@ -51,3 +62,5 @@ observer.observe(targetNode, {
 	characterData: true,
 	subtree: true,
 });
+window.localStorage.setItem("bmtoken", "yes");
+console.log(window.localStorage.getItem("bmtoken"));
