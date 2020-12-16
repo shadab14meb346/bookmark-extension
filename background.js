@@ -60,7 +60,7 @@ async function receiver(request, sender, sendResponse) {
 	}
 }
 
-const condition = false;
+const condition = true;
 condition && chrome.browserAction.setPopup({popup: "popup.html"});
 chrome.browserAction.onClicked.addListener(function (tab) {
 	var newURL = "https://bookmarker-front.vercel.app/";

@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
-	"name": "Budget Manager",
-	"description": "My first chrome extension",
+	"name": "Bookmark Tweets",
+	"description": "Saved tweets CRM",
 	"version": "1.0.0",
 	"icons": {
 		"16": "./icon16.png",
@@ -10,7 +10,7 @@
 	},
 	"browser_action": {
 		"default_icon": "icon16.png",
-		"default_title": "My first chrome extension"
+		"default_title": "Saved tweets CRM"
 	},
 	"options_page": "./options.html",
 	"background": {
