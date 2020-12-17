@@ -6,10 +6,11 @@ function uuidv4() {
 	});
 }
 
+let clickedButtonId;
+
 function handleBMClick(bmButtonId, tweetLink, toggleDivId) {
+	clickedButtonId = bmButtonId;
 	const targetDivToToggle = document.getElementById(toggleDivId);
-	const targetBMButton = document.getElementById(bmButtonId);
-	targetBMButton.style["background"] = "red";
 	const targetDivDisplay = targetDivToToggle.style.display;
 	if (targetDivDisplay === "none") {
 		targetDivToToggle.style["display"] = "block";
@@ -110,4 +111,12 @@ observer.observe(targetNode, {
 	attributes: true,
 	characterData: true,
 	subtree: true,
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	if (request.text == "saved successfully") {
+		console.log(request.text);
+		document.getElementById(clickedButtonId).style["background"] = "red";
+		sendResponse({type: "response received"});
+	}
 });

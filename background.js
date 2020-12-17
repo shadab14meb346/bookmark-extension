@@ -55,6 +55,17 @@ async function receiver(request, sender, sendResponse) {
 			options
 		);
 		console.log(data.json().then((data) => console.log(data)));
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			chrome.tabs.sendMessage(
+				tabs[0].id,
+				{text: "saved successfully"},
+				function (response) {
+					if (response.type == "response received") {
+						console.log(response.type);
+					}
+				}
+			);
+		});
 	} catch (error) {
 		console.error(error);
 	}
