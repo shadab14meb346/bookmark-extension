@@ -35,6 +35,31 @@
 // chrome.tabs.executeScript(null, {file: "./foreground.js"}, () =>
 // 	console.log("I injected foreground")
 // );
+
+let haveCookie = false;
+
+chrome.tabs.onActivated.addListener((tab) => {
+	// console.log(tab);
+	chrome.tabs.get(tab.tabId, (current_tab_info) => {
+		console.log("CALLED", current_tab_info.url);
+		if (current_tab_info.url === "https://twitter.com/home") {
+			console.log("CALLEDjnkjkj", current_tab_info.url);
+
+			chrome.cookies.get(
+				{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+				function (cookie) {
+					if (cookie.value) {
+						haveCookie = true;
+						chrome.browserAction.setPopup({popup: "popup.html"});
+						console.log(haveCookie);
+					} else {
+						console.log("Can't get cookie! Check the name!");
+					}
+				}
+			);
+		}
+	});
+});
 console.log("background running");
 
 chrome.runtime.onMessage.addListener(receiver);
@@ -71,20 +96,8 @@ async function receiver(request, sender, sendResponse) {
 	}
 }
 
-const haveCookie = false;
-chrome.cookies.get(
-	{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
-	function (cookie) {
-		if (cookie) {
-			haveCookie = true;
-		} else {
-			console.log("Can't get cookie! Check the name!");
-		}
-	}
-);
-
-haveCookie && chrome.browserAction.setPopup({popup: "popup.html"});
 chrome.browserAction.onClicked.addListener(function (tab) {
+	console.log(haveCookie);
 	var newURL = "https://bookmarker-front.vercel.app/";
 	chrome.tabs.create({url: newURL});
 });
