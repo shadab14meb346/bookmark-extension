@@ -54,7 +54,7 @@ async function receiver(request, sender, sendResponse) {
 			"https://backend-bookmarker.herokuapp.com/demo",
 			options
 		);
-		console.log(data.json());
+		console.log(data.json().then((data) => console.log(data)));
 	} catch (error) {
 		console.error(error);
 	}

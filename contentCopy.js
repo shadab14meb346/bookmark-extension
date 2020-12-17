@@ -6,14 +6,20 @@ function uuidv4() {
 	});
 }
 
-function handleBMClick(id, toggleDivId) {
+function handleBMClick(bmButtonId, tweetLink, toggleDivId) {
 	const targetDivToToggle = document.getElementById(toggleDivId);
+	const targetBMButton = document.getElementById(bmButtonId);
+	targetBMButton.style["background"] = "red";
 	const targetDivDisplay = targetDivToToggle.style.display;
 	if (targetDivDisplay === "none") {
 		targetDivToToggle.style["display"] = "block";
 	} else {
 		targetDivToToggle.style["display"] = "none";
 	}
+	const message = {
+		tweetLink,
+	};
+	chrome.runtime.sendMessage(message);
 }
 
 function addBMButton(mainDivHavingTweetActions) {
@@ -43,12 +49,12 @@ function addBMButton(mainDivHavingTweetActions) {
 	contentDiv.innerHTML = `<input type="text" placeholder="Search" />
         <h4>Tag1</h4>
 				<h4>Tag2</h4>`;
-	newButton.value = contentDivId;
+	newButton.value = linkOfTweet;
 	newButton.toggleDivId = contentDivId;
 
 	newButton.addEventListener("click", function (e) {
 		console.log(e.target.id, e.target.value, e.target.toggleDivId);
-		handleBMClick(e.target.id, e.target.value);
+		handleBMClick(e.target.id, e.target.value, e.target.toggleDivId);
 	});
 
 	newContainer.appendChild(contentDiv);
