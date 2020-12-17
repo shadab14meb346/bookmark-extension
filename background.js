@@ -60,8 +60,19 @@ async function receiver(request, sender, sendResponse) {
 	}
 }
 
-const condition = true;
-condition && chrome.browserAction.setPopup({popup: "popup.html"});
+const haveCookie = false;
+chrome.cookies.get(
+	{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+	function (cookie) {
+		if (cookie) {
+			haveCookie = true;
+		} else {
+			console.log("Can't get cookie! Check the name!");
+		}
+	}
+);
+
+haveCookie && chrome.browserAction.setPopup({popup: "popup.html"});
 chrome.browserAction.onClicked.addListener(function (tab) {
 	var newURL = "https://bookmarker-front.vercel.app/";
 	chrome.tabs.create({url: newURL});

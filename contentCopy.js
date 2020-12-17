@@ -6,32 +6,56 @@ function uuidv4() {
 	});
 }
 
-function handleBMClick(tweetLink, id) {
-	console.log(tweetLink, id);
-	let message = {
-		tweetLink,
-		id,
-	};
-	chrome.runtime.sendMessage(message);
-	document.getElementById(id).style["background"] = "red";
+function handleBMClick(id, toggleDivId) {
+	const targetDivToToggle = document.getElementById(toggleDivId);
+	const targetDivDisplay = targetDivToToggle.style.display;
+	if (targetDivDisplay === "none") {
+		targetDivToToggle.style["display"] = "block";
+	} else {
+		targetDivToToggle.style["display"] = "none";
+	}
 }
 
 function addBMButton(mainDivHavingTweetActions) {
 	const linkOfTweet = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
 		"a"
 	)[1];
-	const bewButton = document.createElement("button");
-	bewButton.innerHTML = "BM";
-	bewButton.value = linkOfTweet;
-	bewButton.id = "";
-	bewButton.style.color = "#5b7082";
-	bewButton.style.display = "flex";
-	bewButton.style.alignItems = "center";
-	bewButton.id = uuidv4();
-	bewButton.addEventListener("click", function (e) {
-		handleBMClick(e.target.value, e.target.id);
+	const containerId = uuidv4();
+	const newContainer = document.createElement("div");
+	newContainer.style.position = "relative";
+	newContainer.style.border = "1px solid red";
+	newContainer.id = containerId;
+	const newButton = document.createElement("button");
+	newButton.innerHTML = "BM";
+	newButton.style.color = "#5b7082";
+	newButton.style.display = "flex";
+	newButton.style.alignItems = "center";
+	newButton.id = uuidv4();
+	const contentDiv = document.createElement("div");
+	const contentDivId = uuidv4();
+	contentDiv.id = contentDivId;
+	contentDiv.style.border = "1px solid pink";
+	contentDiv.style.top = "-120px";
+	contentDiv.style.left = "-82px";
+	contentDiv.style.display = "none";
+	contentDiv.style.position = "absolute";
+	contentDiv.style.background = "white";
+	contentDiv.innerHTML = `<input type="text" placeholder="Search" />
+        <h4>Tag1</h4>
+				<h4>Tag2</h4>`;
+	newButton.value = contentDivId;
+	newButton.toggleDivId = contentDivId;
+
+	newButton.addEventListener("click", function (e) {
+		console.log(e.target.id, e.target.value, e.target.toggleDivId);
+		handleBMClick(e.target.id, e.target.value);
 	});
-	mainDivHavingTweetActions.appendChild(bewButton);
+
+	newContainer.appendChild(contentDiv);
+	const layerNode = document.getElementById("layers");
+	layerNode.appendChild(newContainer);
+	newContainer.appendChild(newButton);
+	mainDivHavingTweetActions.appendChild(newContainer);
 }
 const callbackForSectionMutation = function (_mutations) {
 	const addedNodes = [];
@@ -81,5 +105,3 @@ observer.observe(targetNode, {
 	characterData: true,
 	subtree: true,
 });
-window.localStorage.setItem("bmtoken", "yes");
-console.log(window.localStorage.getItem("bmtoken"));
