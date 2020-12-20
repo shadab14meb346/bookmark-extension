@@ -5,24 +5,70 @@ function uuidv4() {
 		return v.toString(16);
 	});
 }
+let clientX;
+let clientY;
 
 let clickedButtonId;
 
-function handleBMClick(bmButtonId, tweetLink, toggleDivId) {
+function handleBMClick(bmButtonId, tweetLink, toggleDivId, x, y) {
 	clickedButtonId = bmButtonId;
 	const targetDivToToggle = document.getElementById(toggleDivId);
 	const targetDivDisplay = targetDivToToggle.style.display;
-	if (targetDivDisplay === "none") {
-		targetDivToToggle.style["display"] = "block";
-	} else {
-		targetDivToToggle.style["display"] = "none";
-	}
+	console.log({x, y});
+	const menuDiv = document.createElement("div");
+	const menu = `
+<div class="css-1dbjc4n r-1d2f490 r-105ug2t r-u8s1d r-zchlnj r-ipm5af" style="right:${x} !important;top:${y} !important">
+   <div class="css-1dbjc4n r-12vffkv">
+      <div class="css-1dbjc4n r-12vffkv">
+         <div class="css-1dbjc4n r-1pz39u2 r-16y2uox r-1wbh5a2">
+            <div data-focusable="true" tabindex="0" class="css-1dbjc4n">
+               <div class="css-1dbjc4n r-1p0dtai r-1d2f490 r-1xcajam r-zchlnj r-ipm5af"></div>
+               <div class="css-1dbjc4n r-1d2f490 r-u8s1d r-zchlnj r-ipm5af"></div>
+               <div role="menu" class="css-1dbjc4n r-14lw9ot r-z2wwpe r-1upvrn0 r-1ekmkwe r-1udh08x r-u8s1d" style="right: 829.812px; top: 664.438px;">
+                  <div style="">
+                     <div class="css-1dbjc4n">
+                        <div class="css-1dbjc4n">
+                           <div role="menuitem" data-focusable="true" tabindex="0" class="css-1dbjc4n r-1loqt21 r-18u37iz r-1ny4l3l r-1j3t67a r-9qu9m4 r-o7ynqc r-6416eg r-13qz1uu">
+                              <div class="css-1dbjc4n r-1777fci"></div>
+                              <div class="css-1dbjc4n r-16y2uox r-1wbh5a2">
+                                 <div dir="auto" class="css-901oao r-18jsvk2 r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-qvutc0"><input class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0" type="text" placeholder="Search"/></div>
+                              </div>
+                           </div>
+                           <div role="menuitem" data-focusable="true" tabindex="0" class="css-1dbjc4n r-1loqt21 r-18u37iz r-1ny4l3l r-1j3t67a r-9qu9m4 r-o7ynqc r-6416eg r-13qz1uu">
+                              <div class="css-1dbjc4n r-1777fci"></div>
+                              <div class="css-1dbjc4n r-16y2uox r-1wbh5a2">
+                                 <div dir="auto" class="css-901oao r-18jsvk2 r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">Add Tweet to Bookmarks</span></div>
+                              </div>
+                           </div>
+                           <div role="menuitem" data-focusable="true" tabindex="0" class="css-1dbjc4n r-1loqt21 r-18u37iz r-1ny4l3l r-1j3t67a r-9qu9m4 r-o7ynqc r-6416eg r-13qz1uu">
+                              <div class="css-1dbjc4n r-1777fci"></div>
+                              <div class="css-1dbjc4n r-16y2uox r-1wbh5a2">
+                                 <div dir="auto" class="css-901oao r-18jsvk2 r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">Copy link to Tweet</span></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div data-focusable="true" tabindex="0" class="css-1dbjc4n"></div>
+         </div>
+      </div>
+   </div>
+</div>
+`;
+	// menuDiv.innerHTML = menu;
+	// document.getElementById("layers").appendChild(menuDiv);
+	// if (targetDivDisplay === "none") {
+	// 	targetDivToToggle.style["display"] = "block";
+	// } else {
+	// 	targetDivToToggle.style["display"] = "none";
+	// }
 	const message = {
 		tweetLink,
 	};
 	chrome.runtime.sendMessage(message);
 }
-
 function addBMButton(mainDivHavingTweetActions) {
 	const linkOfTweet = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
 		"a"
@@ -55,7 +101,13 @@ function addBMButton(mainDivHavingTweetActions) {
 
 	newButton.addEventListener("click", function (e) {
 		console.log(e.target.id, e.target.value, e.target.toggleDivId);
-		handleBMClick(e.target.id, e.target.value, e.target.toggleDivId);
+		handleBMClick(
+			e.target.id,
+			e.target.value,
+			e.target.toggleDivId,
+			e.clientX,
+			e.clientY
+		);
 	});
 
 	newContainer.appendChild(contentDiv);
@@ -120,3 +172,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		sendResponse({type: "response received"});
 	}
 });
+
+document.addEventListener("click", printMousePos);
+function printMousePos(event) {
+	clientX = event.clientX;
+	clientY = event.clientY;
+}

@@ -36,68 +36,109 @@
 // 	console.log("I injected foreground")
 // );
 
-let haveCookie = false;
+// let haveCookie = false;
 
-chrome.tabs.onActivated.addListener((tab) => {
-	// console.log(tab);
-	chrome.tabs.get(tab.tabId, (current_tab_info) => {
-		console.log("CALLED", current_tab_info.url);
-		if (current_tab_info.url === "https://twitter.com/home") {
-			console.log("CALLEDjnkjkj", current_tab_info.url);
+// chrome.tabs.onActivated.addListener((tab) => {
+// 	// console.log(tab);
+// 	chrome.tabs.get(tab.tabId, (current_tab_info) => {
+// 		console.log("CALLED", current_tab_info.url);
+// 		if (current_tab_info.url === "https://twitter.com/home") {
+// 			console.log("CALLEDjnkjkj", current_tab_info.url);
 
-			chrome.cookies.get(
-				{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
-				function (cookie) {
-					if (cookie.value) {
-						haveCookie = true;
-						chrome.browserAction.setPopup({popup: "popup.html"});
-						console.log(haveCookie);
-					} else {
-						console.log("Can't get cookie! Check the name!");
-					}
-				}
-			);
-		}
-	});
-});
+// 			chrome.cookies.get(
+// 				{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+// 				function (cookie) {
+// 					if (cookie.value) {
+// 						haveCookie = true;
+// 						chrome.browserAction.setPopup({popup: "popup.html"});
+// 						console.log(haveCookie);
+// 					} else {
+// 						console.log("Can't get cookie! Check the name!");
+// 					}
+// 				}
+// 			);
+// 		}
+// 	});
+// });
 console.log("background running");
 
 chrome.runtime.onMessage.addListener(receiver);
 
 async function receiver(request, sender, sendResponse) {
-	try {
-		const options = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				data: request.tweetLink,
-			}),
-		};
-		const data = await fetch(
-			"https://backend-bookmarker.herokuapp.com/demo",
-			options
-		);
-		console.log(data.json().then((data) => console.log(data)));
-		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-			chrome.tabs.sendMessage(
-				tabs[0].id,
-				{text: "saved successfully"},
-				function (response) {
-					if (response.type == "response received") {
-						console.log(response.type);
-					}
+	chrome.cookies.get(
+		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+		async function (cookie) {
+			if (cookie) {
+				console.log(request.tweetLink);
+				try {
+					const options = {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${cookie.value}`,
+						},
+						body: JSON.stringify({
+							tweet: {
+								tweetUrl: request.tweetLink,
+							},
+							notes: "from extension action",
+						}),
+					};
+					const data = await fetch(
+						"https://backend-bookmarker.herokuapp.com/api/tweet-test",
+						options
+					);
+					console.log(data.json().then((data) => console.log(data)));
+					chrome.tabs.query(
+						{active: true, currentWindow: true},
+						function (tabs) {
+							chrome.tabs.sendMessage(
+								tabs[0].id,
+								{text: "saved successfully"},
+								function (response) {
+									if (response.type == "response received") {
+										console.log(response.type);
+									}
+								}
+							);
+						}
+					);
+				} catch (error) {
+					console.error(error);
 				}
-			);
-		});
-	} catch (error) {
-		console.error(error);
-	}
+			} else {
+				var newURL = "https://bookmarker-front.vercel.app/";
+				chrome.tabs.create({url: newURL});
+			}
+		}
+	);
+	// try {
+	// 	const options = {
+	// 		method: "POST",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 		},
+	// 		body: JSON.stringify({
+	// 			data: request.tweetLink,
+	// 		}),
+	// 	};
+	// 	const data = await fetch(
+	// 		"https://backend-bookmarker.herokuapp.com/demo",
+	// 		options
+	// 	);
+	// 	console.log(data.json().then((data) => console.log(data)));
+	// 	chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+	// 		chrome.tabs.sendMessage(
+	// 			tabs[0].id,
+	// 			{text: "saved successfully"},
+	// 			function (response) {
+	// 				if (response.type == "response received") {
+	// 					console.log(response.type);
+	// 				}
+	// 			}
+	// 		);
+	// 	});
+	// } catch (error) {
+	// 	console.error(error);
+	// }
 }
-
-chrome.browserAction.onClicked.addListener(function (tab) {
-	console.log(haveCookie);
-	var newURL = "https://bookmarker-front.vercel.app/";
-	chrome.tabs.create({url: newURL});
-});

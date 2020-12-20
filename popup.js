@@ -17,3 +17,30 @@
 // 	});
 // });
 console.log("from chrome extension content");
+
+function docReady(fn) {
+	// see if DOM is already available
+	if (
+		document.readyState === "complete" ||
+		document.readyState === "interactive"
+	) {
+		// call on next available tick
+		setTimeout(fn, 1);
+	} else {
+		document.addEventListener("DOMContentLoaded", fn);
+	}
+}
+docReady(function () {
+	// DOM is loaded and ready for manipulation here
+	chrome.cookies.get(
+		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+		function (cookie) {
+			if (cookie) {
+				chrome.browserAction.setPopup({popup: "popup.html"});
+			} else {
+				var newURL = "https://bookmarker-front.vercel.app/";
+				chrome.tabs.create({url: newURL});
+			}
+		}
+	);
+});
