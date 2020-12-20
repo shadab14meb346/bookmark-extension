@@ -16,6 +16,10 @@
 // 		});
 // 	});
 // });
+const verifyTokenEndpoint =
+	"https://backend-bookmarker.herokuapp.com/api/verifytoken";
+const appUrl = "https://bookmarker-front.vercel.app/";
+
 console.log("from chrome extension content");
 
 function docReady(fn) {
@@ -34,12 +38,29 @@ docReady(function () {
 	// DOM is loaded and ready for manipulation here
 	chrome.cookies.get(
 		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
-		function (cookie) {
+		async function (cookie) {
 			if (cookie) {
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						token: cookie.value,
+					}),
+				};
+				const response = await fetch(verifyTokenEndpoint, options);
+				if (response) {
+					chrome.browserAction.setPopup({popup: "popup.html"});
+					console.log(
+						response.json().then((response) => console.log(response))
+					);
+				} else {
+					chrome.tabs.create({url: appUrl});
+				}
 				chrome.browserAction.setPopup({popup: "popup.html"});
 			} else {
-				var newURL = "https://bookmarker-front.vercel.app/";
-				chrome.tabs.create({url: newURL});
+				chrome.tabs.create({url: appUrl});
 			}
 		}
 	);
