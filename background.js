@@ -1,13 +1,13 @@
 console.log("background running");
 
 chrome.runtime.onMessage.addListener(receiver);
-
+const createTweetEndpoint =
+	"https://backend-bookmarker.herokuapp.com/api/tweet-test";
 async function receiver(request, sender, sendResponse) {
 	chrome.cookies.get(
 		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
 		async function (cookie) {
 			if (cookie) {
-				console.log(request.tweetLink);
 				try {
 					const options = {
 						method: "POST",
@@ -22,10 +22,7 @@ async function receiver(request, sender, sendResponse) {
 							notes: "from extension action",
 						}),
 					};
-					const data = await fetch(
-						"https://backend-bookmarker.herokuapp.com/api/tweet-test",
-						options
-					);
+					const data = await fetch(createTweetEndpoint, options);
 					console.log(data.json().then((data) => console.log(data)));
 					chrome.tabs.query(
 						{active: true, currentWindow: true},
