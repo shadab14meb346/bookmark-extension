@@ -2,7 +2,7 @@ console.log("background running");
 
 chrome.runtime.onMessage.addListener(receiver);
 const createTweetEndpoint =
-	"https://backend-bookmarker.herokuapp.com/api/tweet-test";
+	"https://backend-bookmarker.herokuapp.com/api/tweet";
 const verifyTokenEndpoint =
 	"https://backend-bookmarker.herokuapp.com/api/verifytoken";
 const appUrl = "https://bookmarker-front.vercel.app/";
@@ -33,12 +33,15 @@ async function receiver(request, sender, sendResponse) {
 							body: JSON.stringify({
 								tweet: {
 									tweetUrl: request.tweetUrl,
+									text: request.text,
+									createdAt: request.date,
 								},
 								notes: "from extension action",
 							}),
 						};
 						const response = await fetch(createTweetEndpoint, options);
-						const data = response.json().then((response) => response);
+						const data = await response.json().then((response) => response);
+						console.log({data});
 						if (data) {
 							chrome.tabs.query(
 								{active: true, currentWindow: true},
