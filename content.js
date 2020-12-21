@@ -26,16 +26,16 @@ let clientY;
 
 let clickedButtonId;
 
-function handleBMClick(bmButtonId, tweetLink, toggleDivId, x, y) {
+function handleBMClick(bmButtonId, tweetUrl, toggleDivId, x, y) {
 	clickedButtonId = bmButtonId;
 	console.log({x, y});
 	const message = {
-		tweetLink,
+		tweetUrl,
 	};
 	chrome.runtime.sendMessage(message);
 }
 function addBMButton(mainDivHavingTweetActions) {
-	const linkOfTweet = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
+	const tweetUrl = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
 		"a"
 	)[1];
 	const containerId = uuidv4();
@@ -64,13 +64,13 @@ function addBMButton(mainDivHavingTweetActions) {
 	contentDiv.innerHTML = `<input type="text" placeholder="Search" />
         <h4>Tag1</h4>
 				<h4>Tag2</h4>`;
-	newButton.value = linkOfTweet;
+	newButton.value = tweetUrl;
 	newButton.toggleDivId = contentDivId;
 
 	newButton.addEventListener("click", function (e) {
 		handleBMClick(
 			containerId,
-			linkOfTweet,
+			tweetUrl.href,
 			e.target.toggleDivId,
 			e.clientX,
 			e.clientY

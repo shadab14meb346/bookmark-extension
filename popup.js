@@ -50,7 +50,8 @@ docReady(function () {
 					}),
 				};
 				const response = await fetch(verifyTokenEndpoint, options);
-				if (response) {
+				const user = response.json().then((response) => response.user);
+				if (user) {
 					chrome.browserAction.setPopup({popup: "popup.html"});
 					console.log(
 						response.json().then((response) => console.log(response))
