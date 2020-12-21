@@ -36,17 +36,17 @@ function handleBMClick(bmButtonId, tweet, toggleDivId, x, y) {
 	};
 	chrome.runtime.sendMessage(message);
 }
-function addBMButton(mainDivHavingTweetActions) {
-	const tweetUrl = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
-		"a"
-	)[1];
-	const tweetText =
-		mainDivHavingTweetActions.parentNode.firstChild.lastChild.lastChild
-			.innerText;
+function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
+	// const tweetUrl = mainDivHavingTweetActions.parentNode.parentNode.firstChild.lastChild.lastChild.firstChild.querySelectorAll(
+	// 	"a"
+	// )[1];
+	// const tweetText =
+	// 	mainDivHavingTweetActions.parentNode.firstChild.lastChild.lastChild
+	// 		.innerText;
 
-	const date =
-		mainDivHavingTweetActions.parentNode.parentNode.firstChild.firstChild
-			.firstChild.firstChild.lastChild.lastChild.dateTime;
+	// const date =
+	// 	mainDivHavingTweetActions.parentNode.parentNode.firstChild.firstChild
+	// 		.firstChild.firstChild.lastChild.lastChild.dateTime;
 	// const tweetMediaUrl =
 	// 	mainDivHavingTweetActions.parentNode.firstChild.lastChild.lastChild
 	// 		.innerText;
@@ -100,54 +100,54 @@ function addBMButton(mainDivHavingTweetActions) {
 	newContainer.appendChild(newButton);
 	mainDivHavingTweetActions.appendChild(newContainer);
 }
-const callbackForSectionMutation = function (_mutations) {
-	const addedNodes = [];
-	_mutations.forEach(
-		(record) => record.addedNodes.length & addedNodes.push(...record.addedNodes)
-	);
-	const addedDivNodes = addedNodes.filter((node) => node.nodeName === "DIV");
-	if (addedDivNodes.length) {
-		for (const div of addedDivNodes) {
-			const mainDivHavingTweetActions = div.querySelector(
-				".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
-			);
-			if (mainDivHavingTweetActions) {
-				addBMButton(mainDivHavingTweetActions);
-			}
-		}
-	}
-};
+// const callbackForSectionMutation = function (_mutations) {
+// 	const addedNodes = [];
+// 	_mutations.forEach(
+// 		(record) => record.addedNodes.length & addedNodes.push(...record.addedNodes)
+// 	);
+// 	const addedDivNodes = addedNodes.filter((node) => node.nodeName === "DIV");
+// 	if (addedDivNodes.length) {
+// 		for (const div of addedDivNodes) {
+// 			const mainDivHavingTweetActions = div.querySelector(
+// 				".css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws"
+// 			);
+// 			if (mainDivHavingTweetActions) {
+// 				addBMButton(mainDivHavingTweetActions);
+// 			}
+// 		}
+// 	}
+// };
 
-const callback = function (mutationsList) {
-	const addedNodes = [];
-	mutationsList.forEach(
-		(record) => record.addedNodes.length & addedNodes.push(...record.addedNodes)
-	);
-	const sections = addedNodes.filter((node) => node.nodeName === "SECTION");
+// const callback = function (mutationsList) {
+// 	const addedNodes = [];
+// 	mutationsList.forEach(
+// 		(record) => record.addedNodes.length & addedNodes.push(...record.addedNodes)
+// 	);
+// 	const sections = addedNodes.filter((node) => node.nodeName === "SECTION");
 
-	for (const section of sections) {
-		if (section.textContent.includes("Your Home Timeline")) {
-			const observer = new MutationObserver(callbackForSectionMutation);
-			const targetNode = section;
-			observer.observe(targetNode, {
-				childList: true,
-				attributes: true,
-				characterData: true,
-				subtree: true,
-			});
-		}
-	}
-};
+// 	for (const section of sections) {
+// 		if (section.textContent.includes("Your Home Timeline")) {
+// 			const observer = new MutationObserver(callbackForSectionMutation);
+// 			const targetNode = section;
+// 			observer.observe(targetNode, {
+// 				childList: true,
+// 				attributes: true,
+// 				characterData: true,
+// 				subtree: true,
+// 			});
+// 		}
+// 	}
+// };
 
-// Create an observer instance linked to the callback function
-const observer = new MutationObserver(callback);
-const targetNode = document.querySelector("#react-root");
-observer.observe(targetNode, {
-	childList: true,
-	attributes: true,
-	characterData: true,
-	subtree: true,
-});
+// // Create an observer instance linked to the callback function
+// const observer = new MutationObserver(callback);
+// const targetNode = document.querySelector("#react-root");
+// observer.observe(targetNode, {
+// 	childList: true,
+// 	attributes: true,
+// 	characterData: true,
+// 	subtree: true,
+// });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.text == "saved successfully") {
@@ -155,4 +155,116 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		document.getElementById(clickedButtonId).style["background"] = "red";
 		sendResponse({type: "response received"});
 	}
+});
+/** this symbol '!' before the below anonymous function is a function expression.A good explanation about it's use is here
+https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function
+*/
+!(function (e) {
+	"use strict";
+	var t,
+		r = [],
+		n = e.document,
+		o = e.MutationObserver || e.WebKitMutationObserver;
+	function a() {
+		for (var e, t, o = 0, a = r.length; o < a; o++) {
+			e = r[o];
+			for (
+				var s, i = 0, l = (t = n.querySelectorAll(e.selector)).length;
+				i < l;
+				i++
+			)
+				(s = t[i]).ready || ((s.ready = true), e.fn.call(s, s));
+		}
+	}
+	e.ready = function (e, s) {
+		r.push({selector: e, fn: s}),
+			t ||
+				(t = new o(a)).observe(n.documentElement, {
+					childList: true,
+					subtree: true,
+				}),
+			a();
+	};
+})(this);
+const moreInTwitterSupportedLanguages = [
+	"المزيد",
+	"আরও",
+	"Gehiago",
+	"More",
+	"Още",
+	"Més",
+	"Više",
+	"Víc",
+	"Mere",
+	"Meer",
+	"More",
+	"Higit pa",
+	"Lisää",
+	"Plus",
+	"Máis",
+	"Mehr",
+	"Περισσότερα",
+	"વધુ",
+	"עוד",
+	"और अधिक",
+	"Még több",
+	"Selengkapnya",
+	"Tuilleadh",
+	"Altro",
+	"もっと見る",
+	"ಮತ್ತಷ್ಟು",
+	"더 보기",
+	"Lagi",
+	"अधिक",
+	"Mer",
+	"بیشتر",
+	"Więcej",
+	"Mais",
+	"Mai multe",
+	"Еще",
+	"Још",
+	"更多",
+	"Viac",
+	"Más opciones",
+	"Mer",
+	"மேலும்",
+	"เพิ่มเติม",
+	"更多",
+	"Daha fazla",
+	"Інші дії",
+	"مزید",
+	"Thêm",
+]
+	.map(
+		(moreInTwitterSupportedLanguages) =>
+			`div[aria-label="${moreInTwitterSupportedLanguages}"]`
+	)
+	.join(",");
+
+ready("article", (article) => {
+	//this div has multiple children and with tags like span, anchor tag etc so will need to iterate all and then get the complete text of the tweet.
+	const divContainingTweetText = article.querySelector(
+		".css-901oao.r-18jsvk2.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0"
+	);
+	console.log(divContainingTweetText);
+	const moreSection = article.querySelector(moreInTwitterSupportedLanguages);
+	const divContainingTweetActions = article.querySelector("div[role=group]");
+	if (!moreSection) return;
+	//regex to check if it's a tweet link or not;
+	const tweetUrlRegex = /^https:\/\/(?:m.|mobile.|www.)?twitter\.com\/.+\/status\/([0-9]+)$/;
+	let currentTweetLink;
+	const allAnchorTagsInArticle = [...article.querySelectorAll("a[role=link]")];
+	for (const anchorTag of allAnchorTagsInArticle) {
+		if (tweetUrlRegex.test(anchorTag.href)) {
+			currentTweetLink = anchorTag.href;
+			break;
+		}
+	}
+	currentTweetLink || (currentTweetLink = window.location.href);
+	addBMButton(
+		divContainingTweetActions,
+		currentTweetLink,
+		"hardcoded text",
+		"2020-12-21T11:38:23.000Z"
+	);
 });
