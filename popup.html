@@ -1,14 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Bookmark Tweets</title>
+		<title>tweetflick</title>
+		<link rel="stylesheet" href="popup.css" />
 		<script src="./popup.js"></script>
 		<!-- <script src="jquery-3.5.1.min.js"></script> -->
 	</head>
 	<body>
-		<h1 id="bookmark-header">Bookmark Tweets</h1>
-		<h4>Sign out</h4>
-		<h4>Sign out</h4>
-		<h4>Open my list</h4>
+		<div class="header">
+			<svg
+				width="32"
+				height="35"
+				viewBox="0 0 32 35"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M6.71939 12.6659L23.2267 22.1964C23.6247 22.4262 23.9151 22.8046 24.034 23.2486C24.153 23.6925 24.0907 24.1655 23.8609 24.5635L18.9513 33.0672C18.7215 33.4652 18.343 33.7556 17.8991 33.8746C17.4552 33.9935 16.9822 33.9313 16.5842 33.7015L1.57759 25.0374C1.17959 24.8076 0.889172 24.4291 0.770226 23.9852C0.65128 23.5413 0.713549 23.0683 0.943335 22.6703L6.71939 12.6659Z"
+					fill="#9966FF"
+				/>
+				<path
+					d="M22.5799 6.3136L10.3413 7.60585C10.0767 7.63373 9.82241 7.72377 9.59921 7.86861C9.37602 8.01346 9.19023 8.20902 9.057 8.43933L0.947531 22.4853C0.613294 23.0643 0.657342 23.8928 1.05551 24.5671C1.13451 23.755 1.65346 23.0722 2.47027 23.0214L15.2326 21.6729C15.4972 21.645 15.7515 21.555 15.9747 21.4101C16.1979 21.2653 16.3836 21.0697 16.5169 20.8394L23.8093 8.20853C23.9256 8.00604 23.9837 7.7754 23.9774 7.542C23.971 7.30859 23.9004 7.08146 23.7734 6.88559C23.6463 6.68971 23.4676 6.53268 23.2571 6.43176C23.0465 6.33085 22.8122 6.28997 22.5799 6.3136Z"
+					fill="url(#paint0_linear)"
+				/>
+				<path
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M18.7045 17.0502L16.5101 20.8511C16.24 21.3189 15.7679 21.6234 15.2291 21.6787L2.4702 23.0214C1.65339 23.0722 1.13781 23.7492 1.05544 24.5671L1.06219 24.5554C0.792431 24.1046 0.68541 23.575 0.758991 23.0549C0.798759 22.8303 0.876174 22.614 0.987971 22.4152L7.74023 10.7199L18.7045 17.0502Z"
+					fill="url(#paint1_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="18.0836"
+						y1="5.47197"
+						x2="11.0984"
+						y2="17.5707"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop offset="0.317708" stop-color="#3CC8F3" />
+						<stop offset="1" stop-color="#0090BC" />
+					</linearGradient>
+					<linearGradient
+						id="paint1_linear"
+						x1="4.7321"
+						y1="15.9301"
+						x2="16.9595"
+						y2="22.9896"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#9966FF" />
+						<stop offset="1" stop-color="#1C0054" />
+					</linearGradient>
+				</defs>
+			</svg>
+			<h1>tweetflick</h1>
+		</div>
+		<h4 id="signout" class="hover">Sign Out</h4>
+		<h4 id="my-list" class="hover">Open my list</h4>
 	</body>
 </html>

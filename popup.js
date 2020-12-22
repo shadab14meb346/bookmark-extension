@@ -65,4 +65,10 @@ docReady(function () {
 			}
 		}
 	);
+	document.getElementById("signout").addEventListener("click", function () {
+		chrome.tabs.create({url: appUrl});
+	});
+	document.getElementById("my-list").addEventListener("click", function () {
+		chrome.tabs.create({url: appUrl});
+	});
 });
