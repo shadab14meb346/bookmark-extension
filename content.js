@@ -260,9 +260,7 @@ ready("article", (article) => {
 		}
 	}
 	//this div has multiple children and with tags like span, anchor tag etc so will need to iterate all and then get the complete text of the tweet.
-	const divContainingTweetText = article.querySelector(
-		".css-901oao.r-18jsvk2.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0"
-	);
+	const divContainingTweetText = article.querySelector("div[dir=auto][lang]");
 	let tweetText = "no text from tweet";
 	if (divContainingTweetText) {
 		tweetText = ((divContainingTweetText) => {
@@ -277,6 +275,21 @@ ready("article", (article) => {
 	const timeTag = article.querySelector("time");
 	if (timeTag) {
 		date = timeTag.dateTime;
+	}
+	/**some tweets like this 'https://twitter.com/MicrosoftIndia/status/1341209990359638017'
+	doesn't have time on top but below so for them to get time will need to look into other div
+	 */
+	//there are two cases. 1. Tweet url is available 2. Tweet Url and date both not available(this is when user clicks on the tweet having replies and then trying to save it)
+	//there are edge cases when user have add blocker it can give some bugs
+	if (!date) {
+		const allAnchorTagsInArticle = [
+			...article.querySelectorAll("a[role=link]"),
+		];
+		for (const anchorTag of allAnchorTagsInArticle) {
+			if (anchorTag.href === currentTweetLink) {
+				date = Date(anchorTag.innerText);
+			}
+		}
 	}
 	if (divContainingTweetActions && currentTweetLink) {
 		addBMButton(divContainingTweetActions, currentTweetLink, tweetText, date);
