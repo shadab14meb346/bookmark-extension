@@ -81,7 +81,7 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 
 	newButton.addEventListener("click", function (e) {
 		const tweet = {
-			tweetUrl: tweetUrl.href,
+			tweetUrl,
 			text: tweetText,
 			date,
 		};
@@ -159,12 +159,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 /** this symbol '!' before the below anonymous function is a function expression.A good explanation about it's use is here
 https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function
 */
-!(function (e) {
+!(function (window) {
 	"use strict";
+	const observer = window.MutationObserver || window.WebKitMutationObserver;
 	var t,
 		r = [],
-		n = e.document,
-		o = e.MutationObserver || e.WebKitMutationObserver;
+		n = window.document;
 	function a() {
 		for (var e, t, o = 0, a = r.length; o < a; o++) {
 			e = r[o];
@@ -176,10 +176,10 @@ https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-be
 				(s = t[i]).ready || ((s.ready = true), e.fn.call(s, s));
 		}
 	}
-	e.ready = function (e, s) {
+	window.ready = function (e, s) {
 		r.push({selector: e, fn: s}),
 			t ||
-				(t = new o(a)).observe(n.documentElement, {
+				(t = new observer(a)).observe(n.documentElement, {
 					childList: true,
 					subtree: true,
 				}),
@@ -242,11 +242,6 @@ const moreInTwitterSupportedLanguages = [
 	.join(",");
 
 ready("article", (article) => {
-	//this div has multiple children and with tags like span, anchor tag etc so will need to iterate all and then get the complete text of the tweet.
-	const divContainingTweetText = article.querySelector(
-		".css-901oao.r-18jsvk2.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0"
-	);
-	console.log(divContainingTweetText);
 	const moreSection = article.querySelector(moreInTwitterSupportedLanguages);
 	const divContainingTweetActions = article.querySelector("div[role=group]");
 	if (!moreSection) return;
@@ -260,11 +255,23 @@ ready("article", (article) => {
 			break;
 		}
 	}
-	currentTweetLink || (currentTweetLink = window.location.href);
-	addBMButton(
-		divContainingTweetActions,
-		currentTweetLink,
-		"hardcoded text",
-		"2020-12-21T11:38:23.000Z"
+	//this div has multiple children and with tags like span, anchor tag etc so will need to iterate all and then get the complete text of the tweet.
+	const divContainingTweetText = article.querySelector(
+		".css-901oao.r-18jsvk2.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0"
 	);
+	const tweetText = ((divContainingTweetText) => {
+		let tweetTextResult = "";
+		for (const child of divContainingTweetText.children) {
+			tweetTextResult += child.innerText;
+		}
+		return tweetTextResult;
+	})(divContainingTweetText);
+	if (tweetText && currentTweetLink) {
+		addBMButton(
+			divContainingTweetActions,
+			currentTweetLink,
+			tweetText,
+			"2020-12-21T11:38:23.000Z"
+		);
+	}
 });
