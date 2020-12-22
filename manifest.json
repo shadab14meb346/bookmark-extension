@@ -19,7 +19,7 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://twitter.com/*"],
+			"matches": ["https://twitter.com/*", "https://mobile.twitter.com/home"],
 			"js": ["content.js", "popup.js"]
 		}
 	],
