@@ -98,7 +98,11 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 	const layerNode = document.getElementById("layers");
 	layerNode.appendChild(newContainer);
 	newContainer.appendChild(newButton);
-	mainDivHavingTweetActions.appendChild(newContainer);
+	const childCount = mainDivHavingTweetActions.childNodes.length;
+	function insertAfter(newNode, existingNode) {
+		existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+	}
+	insertAfter(newContainer, mainDivHavingTweetActions.childNodes[2]);
 }
 // const callbackForSectionMutation = function (_mutations) {
 // 	const addedNodes = [];
