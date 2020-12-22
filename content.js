@@ -273,12 +273,12 @@ ready("article", (article) => {
 			return tweetTextResult;
 		})(divContainingTweetText);
 	}
+	let date = null;
+	const timeTag = article.querySelector("time");
+	if (timeTag) {
+		date = timeTag.dateTime;
+	}
 	if (divContainingTweetActions && currentTweetLink) {
-		addBMButton(
-			divContainingTweetActions,
-			currentTweetLink,
-			tweetText,
-			"2020-12-21T11:38:23.000Z"
-		);
+		addBMButton(divContainingTweetActions, currentTweetLink, tweetText, date);
 	}
 });
