@@ -259,14 +259,17 @@ ready("article", (article) => {
 	const divContainingTweetText = article.querySelector(
 		".css-901oao.r-18jsvk2.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0"
 	);
-	const tweetText = ((divContainingTweetText) => {
-		let tweetTextResult = "";
-		for (const child of divContainingTweetText.children) {
-			tweetTextResult += child.innerText;
-		}
-		return tweetTextResult;
-	})(divContainingTweetText);
-	if (tweetText && currentTweetLink) {
+	let tweetText = null;
+	if (divContainingTweetText) {
+		tweetText = ((divContainingTweetText) => {
+			let tweetTextResult = "";
+			for (const child of divContainingTweetText.children) {
+				tweetTextResult += child.innerText;
+			}
+			return tweetTextResult;
+		})(divContainingTweetText);
+	}
+	if (divContainingTweetActions && currentTweetLink) {
 		addBMButton(
 			divContainingTweetActions,
 			currentTweetLink,
