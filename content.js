@@ -41,6 +41,9 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 	const newContainer = document.createElement("div");
 	newContainer.style.display = "flex";
 	newContainer.style.alignItems = "center";
+	newContainer.style.justifyContent = "center";
+	newContainer.style.height = "100%";
+	newContainer.style.width = "34px";
 	newContainer.id = containerId;
 	const newButton = document.createElement("button");
 	newButton.innerHTML = icon;
@@ -54,17 +57,29 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 	const contentDiv = document.createElement("div");
 	const contentDivId = uuidv4();
 	contentDiv.id = contentDivId;
-	contentDiv.style.border = "1px solid pink";
-	contentDiv.style.top = "-120px";
-	contentDiv.style.left = "-82px";
-	contentDiv.style.display = "none";
-	contentDiv.style.position = "absolute";
-	contentDiv.style.background = "white";
-	contentDiv.innerHTML = `<input type="text" placeholder="Search" />
-        <h4>Tag1</h4>
-				<h4>Tag2</h4>`;
+	newButton.style.display = "flex";
+	newButton.style.alignItems = "center";
+	newButton.style.justifyContent = "center";
+	contentDiv.style.display = "flex";
+	contentDiv.style.alignItems = "center";
+	contentDiv.style.justifyContent = "center";
+	contentDiv.style.height = "34px";
+	contentDiv.style.width = "34px";
+	contentDiv.style.borderRadius = "50%";
 	newButton.value = tweetUrl;
 	newButton.toggleDivId = contentDivId;
+	contentDiv.addEventListener("mouseenter", function () {
+		if (contentDiv.style.background !== "rgb(71, 184, 255)") {
+			contentDiv.style.background = "#a1d6f7";
+			contentDiv.style.transitionDuration = "0.2s";
+			contentDiv.style.transitionProperty = "background";
+		}
+	});
+	contentDiv.addEventListener("mouseleave", function () {
+		if (contentDiv.style.background !== "rgb(71, 184, 255)") {
+			contentDiv.style.background = "none";
+		}
+	});
 
 	newButton.addEventListener("click", function (e) {
 		const tweet = {
@@ -73,19 +88,17 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 			date,
 		};
 		handleBMClick(
-			containerId,
+			contentDivId,
 			tweet,
 			e.target.toggleDivId,
 			e.clientX,
 			e.clientY
 		);
 	});
-
+	contentDiv.appendChild(newButton);
 	newContainer.appendChild(contentDiv);
 	const layerNode = document.getElementById("layers");
 	layerNode.appendChild(newContainer);
-	newContainer.appendChild(newButton);
-	const childCount = mainDivHavingTweetActions.childNodes.length;
 	function insertAfter(newNode, existingNode) {
 		existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 	}
@@ -95,7 +108,7 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.text == "saved successfully") {
 		console.log(request.text);
-		document.getElementById(clickedButtonId).style["background"] = "red";
+		document.getElementById(clickedButtonId).style["background"] = "#47b8ff";
 		sendResponse({type: "response received"});
 	}
 });
