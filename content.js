@@ -25,6 +25,8 @@ let clientX;
 let clientY;
 
 let clickedButtonId;
+//key will tweet url and value will be profile pic
+const tweetAuthorProfilePic = {};
 
 function handleBMClick(bmButtonId, tweet, toggleDivId, x, y) {
 	clickedButtonId = bmButtonId;
@@ -33,6 +35,7 @@ function handleBMClick(bmButtonId, tweet, toggleDivId, x, y) {
 		tweetUrl: tweet.tweetUrl,
 		text: tweet.text,
 		date: tweet.date,
+		profileUrl: tweetAuthorProfilePic[tweet.tweetUrl],
 	};
 	chrome.runtime.sendMessage(message);
 }
@@ -200,7 +203,17 @@ const moreInTwitterSupportedLanguages = [
 ready("article", (article) => {
 	const moreSection = article.querySelector(moreInTwitterSupportedLanguages);
 	const divContainingTweetActions = article.querySelector("div[role=group]");
-	let tweetAuthorProfilePic = null;
+	if (!moreSection) return;
+	//regex to check if it's a tweet link or not;
+	const tweetUrlRegex = /^https:\/\/(?:m.|mobile.|www.)?twitter\.com\/.+\/status\/([0-9]+)$/;
+	let currentTweetLink;
+	const allAnchorTagsInArticle = [...article.querySelectorAll("a[role=link]")];
+	for (const anchorTag of allAnchorTagsInArticle) {
+		if (tweetUrlRegex.test(anchorTag.href)) {
+			currentTweetLink = anchorTag.href;
+			break;
+		}
+	}
 	const articleObserverCallback = (mutation) => {
 		const addedNodes = [];
 		mutation.forEach(
@@ -215,28 +228,16 @@ ready("article", (article) => {
 		};
 		for (const imgTag of addedImgTagNodes) {
 			if (isAProfilePicUrl(imgTag.src)) {
-				tweetAuthorProfilePic = imgTag.src;
+				tweetAuthorProfilePic[currentTweetLink] = imgTag.src;
 				break;
 			}
 		}
-		console.log(tweetAuthorProfilePic);
 	};
 	const observer = new MutationObserver(articleObserverCallback);
 	observer.observe(article, {
 		childList: true,
 		subtree: true,
 	});
-	if (!moreSection) return;
-	//regex to check if it's a tweet link or not;
-	const tweetUrlRegex = /^https:\/\/(?:m.|mobile.|www.)?twitter\.com\/.+\/status\/([0-9]+)$/;
-	let currentTweetLink;
-	const allAnchorTagsInArticle = [...article.querySelectorAll("a[role=link]")];
-	for (const anchorTag of allAnchorTagsInArticle) {
-		if (tweetUrlRegex.test(anchorTag.href)) {
-			currentTweetLink = anchorTag.href;
-			break;
-		}
-	}
 	//this div has multiple children and with tags like span, anchor tag etc so will need to iterate all and then get the complete text of the tweet.
 	const divContainingTweetText = article.querySelector("div[dir=auto][lang]");
 	let tweetText = "no text from tweet";

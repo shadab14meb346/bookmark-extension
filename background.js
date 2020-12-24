@@ -36,7 +36,10 @@ async function receiver(request, sender, sendResponse) {
 									text: request.text,
 									createdAt: request.date,
 								},
-								notes: "from extension action",
+								author: {
+									profileUrl: request.profileUrl,
+									userName: request.tweetUrl.split("/")[3],
+								},
 							}),
 						};
 						const response = await fetch(createTweetEndpoint, options);
