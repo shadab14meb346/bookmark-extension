@@ -200,6 +200,32 @@ const moreInTwitterSupportedLanguages = [
 ready("article", (article) => {
 	const moreSection = article.querySelector(moreInTwitterSupportedLanguages);
 	const divContainingTweetActions = article.querySelector("div[role=group]");
+	let tweetAuthorProfilePic = null;
+	const articleObserverCallback = (mutation) => {
+		const addedNodes = [];
+		mutation.forEach(
+			(record) =>
+				record.addedNodes.length & addedNodes.push(...record.addedNodes)
+		);
+		const addedImgTagNodes = addedNodes.filter(
+			(node) => node.tagName === "IMG"
+		);
+		const isAProfilePicUrl = (url) => {
+			return url.includes("profile_images");
+		};
+		for (const imgTag of addedImgTagNodes) {
+			if (isAProfilePicUrl(imgTag.src)) {
+				tweetAuthorProfilePic = imgTag.src;
+				break;
+			}
+		}
+		console.log(tweetAuthorProfilePic);
+	};
+	const observer = new MutationObserver(articleObserverCallback);
+	observer.observe(article, {
+		childList: true,
+		subtree: true,
+	});
 	if (!moreSection) return;
 	//regex to check if it's a tweet link or not;
 	const tweetUrlRegex = /^https:\/\/(?:m.|mobile.|www.)?twitter\.com\/.+\/status\/([0-9]+)$/;
