@@ -8,7 +8,7 @@ const verifyTokenEndpoint =
 const appUrl = "https://bookmarker-front.vercel.app/";
 async function receiver(request, sender, sendResponse) {
 	chrome.cookies.get(
-		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+		{url: "https://tweetflick.com/", name: "tweet-bookmarker"},
 		async function (cookie) {
 			if (cookie) {
 				const options = {
