@@ -39,6 +39,7 @@ async function receiver(request, sender, sendResponse) {
 								author: {
 									profileUrl: request.profileUrl,
 									userName: request.tweetUrl.split("/")[3],
+									displayName: request.authorDisplayName,
 								},
 							}),
 						};

@@ -36,10 +36,17 @@ function handleBMClick(bmButtonId, tweet, toggleDivId, x, y) {
 		text: tweet.text,
 		date: tweet.date,
 		profileUrl: tweetAuthorProfilePic[tweet.tweetUrl],
+		authorDisplayName: tweet.authorDisplayName,
 	};
 	chrome.runtime.sendMessage(message);
 }
-function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
+function addBMButton(
+	mainDivHavingTweetActions,
+	tweetUrl,
+	tweetText,
+	date,
+	authorDisplayName
+) {
 	const containerId = uuidv4();
 	const newContainer = document.createElement("div");
 	newContainer.style.display = "flex";
@@ -89,6 +96,7 @@ function addBMButton(mainDivHavingTweetActions, tweetUrl, tweetText, date) {
 			tweetUrl,
 			text: tweetText,
 			date,
+			authorDisplayName,
 		};
 		handleBMClick(
 			contentDivId,
@@ -267,6 +275,14 @@ ready("article", (article) => {
 		}
 	}
 	if (divContainingTweetActions && currentTweetLink) {
-		addBMButton(divContainingTweetActions, currentTweetLink, tweetText, date);
+		addBMButton(
+			divContainingTweetActions,
+			currentTweetLink,
+			tweetText,
+			date,
+			article.querySelector(
+				".css-901oao.css-bfa6kz.r-18jsvk2.r-1qd0xha.r-a023e6.r-b88u0q.r-ad9z0x.r-bcqeeo.r-3s2u2q.r-qvutc0"
+			).innerText
+		);
 	}
 });
