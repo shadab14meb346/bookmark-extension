@@ -35,7 +35,7 @@ function handleBMClick(bmButtonId, tweet, toggleDivId, x, y) {
 		tweetUrl: tweet.tweetUrl,
 		text: tweet.text,
 		date: tweet.date,
-		profileUrl: tweetAuthorProfilePic[tweet.tweetUrl],
+		profileImgUrl: tweetAuthorProfilePic[tweet.tweetUrl],
 		authorDisplayName: tweet.authorDisplayName,
 	};
 	chrome.runtime.sendMessage(message);

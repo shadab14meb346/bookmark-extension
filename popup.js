@@ -18,7 +18,7 @@
 // });
 const verifyTokenEndpoint =
 	"https://backend-bookmarker.herokuapp.com/api/verifytoken";
-const appUrl = "https://bookmarker-front.vercel.app/";
+const appUrl = "https://tweetflick.com/";
 
 console.log("from chrome extension content");
 
@@ -37,7 +37,7 @@ function docReady(fn) {
 docReady(function () {
 	// DOM is loaded and ready for manipulation here
 	chrome.cookies.get(
-		{url: "https://bookmarker-front.vercel.app/", name: "tweet-bookmarker"},
+		{url: "https://tweetflick.com/", name: "tweet-bookmarker"},
 		async function (cookie) {
 			if (cookie) {
 				const options = {

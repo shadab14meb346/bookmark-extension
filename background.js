@@ -5,7 +5,7 @@ const createTweetEndpoint =
 	"https://backend-bookmarker.herokuapp.com/api/tweet";
 const verifyTokenEndpoint =
 	"https://backend-bookmarker.herokuapp.com/api/verifytoken";
-const appUrl = "https://bookmarker-front.vercel.app/";
+const appUrl = "https://tweetflick.com/";
 async function receiver(request, sender, sendResponse) {
 	chrome.cookies.get(
 		{url: "https://tweetflick.com/", name: "tweet-bookmarker"},
@@ -31,15 +31,15 @@ async function receiver(request, sender, sendResponse) {
 								Authorization: `Bearer ${cookie.value}`,
 							},
 							body: JSON.stringify({
-								tweet: {
-									tweetUrl: request.tweetUrl,
+								tweetData: {
 									text: request.text,
+									tweetUrl: request.tweetUrl,
 									createdAt: request.date,
-								},
-								author: {
-									profileUrl: request.profileUrl,
-									userName: request.tweetUrl.split("/")[3],
-									displayName: request.authorDisplayName,
+									author: {
+										displayName: request.authorDisplayName,
+										userName: request.tweetUrl.split("/")[3],
+										profileImgUrl: request.profileImgUrl,
+									},
 								},
 							}),
 						};
