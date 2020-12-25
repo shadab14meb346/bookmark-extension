@@ -23,11 +23,5 @@
 			"js": ["content.js", "popup.js"]
 		}
 	],
-	"permissions": [
-		"tabs",
-		"contextMenus",
-		"cookies",
-		"http://*/*",
-		"https://*/*"
-	]
+	"permissions": ["tabs", "cookies", "http://*/*", "https://*/*"]
 }
