@@ -23,5 +23,10 @@
 			"js": ["content.js", "popup.js"]
 		}
 	],
-	"permissions": ["tabs", "cookies", "https://*/*"]
+	"permissions": [
+		"tabs",
+		"cookies",
+		"https://twitter.com/*",
+		"https://tweetflick.com/*"
+	]
 }
